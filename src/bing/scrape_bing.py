@@ -14,7 +14,7 @@ query_headers = {
 
 queries = pd.read_csv(queries_path)["name"].to_list()
 
-queries = queries[12:]
+queries = queries
 
 data=[]
 term_num = 1
@@ -40,28 +40,35 @@ for term in queries:
     page = 0
 
     for result in soup.find_all('li', class_='b_algo'):
-        title = result.find_all('a')[1].text
-        url = result.find('a')['href']
-        snippet= result.find('p').text
+        try:
+            title = result.find_all('a')[1].text
+            url = result.find('a')['href']
+            snippet= result.find('p').text
 
-        
-        data.append({
+            data.append({
             "Search term": term, 
             "page": math.floor(page/10),
             "Site title": title,
             "Web snippet": snippet,
             "URL": url
-        })
+            })
+
+            page += 1
+        except: 
+            print("Dropped...")
+
+        
+        
     
         page += 1
 
         
 
-    print("Finished for term: \"" + str(term) + "\" (" + str(term_num) + " of " + str(len(queries)) + ")")
+    print("Finished for term: \"" + str(term) + "\" (" + str(term_num) + " of " + str(len(queries)) + "). I got " + str(page) + " results.")
     term_num += 1
 
 
-pd.DataFrame(data).to_csv("src/bing/bing_output2.csv")
+pd.DataFrame(data).to_csv("src/bing/bing_output_TESTDOC.csv")
 
 
             
