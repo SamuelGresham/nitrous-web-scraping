@@ -1,5 +1,4 @@
 import pandas as pd 
-import matplotlib.pyplot as plt
 
 domains = list(pd.read_csv("src/result_classification/final.csv")["URL"])
 engine_results = pd.read_csv("src/master.csv")
