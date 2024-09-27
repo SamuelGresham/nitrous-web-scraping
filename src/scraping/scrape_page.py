@@ -6,7 +6,7 @@ from pprint import pprint
 import pandas as pd 
 
 # Define globals
-domain = "https://www.nangwizard.net/"
+domain = "https://www.nangdeliverybrisbane.com.au/"
 internal_links = [domain]
 internal_links_searched = []
 
@@ -17,7 +17,7 @@ t = {
 
 # Checks to see if a URL is within the predefined domain
 def is_within_domain(url):
-    return f'https://{urlparse(url).netloc}/' == domain
+    return f'https://{urlparse(url).netloc}/' == domain or url[0] == "/"
 
 # Gets all the linked pages from a URL
 def get_pages(url): 
@@ -26,7 +26,10 @@ def get_pages(url):
     all_anchors = html.select('a[href]')
     for element in all_anchors: 
         if is_within_domain(element.get("href")): 
-            internal_links.append(element.get('href'))
+            if element.get("href")[0] == "/":
+                internal_links.append(domain+element.get("href"))
+            else:
+                internal_links.append(element.get('href'))
 
 def explore ():
     counter = 0
@@ -105,23 +108,43 @@ for url in res:
 
 print(f"{t['_']}I found {len(product_urls)} items.{t['_']}")
 
-cls_prodname = input("Enter the class for the product name: ")
-cls_price    = input("Enter the class for the price: ")
-cls_descript = input("Enter the class for the product description: ")
+typcls_prodname = input("Enter [type],[class] for the product name: ")
+typcls_price    = input("Enter [type],[class] for the price: ")
+
+typ_prodname = typcls_prodname.split()[0]
+cls_prodname = typcls_prodname.split()[1]
+typ_price = typcls_price.split()[0]
+cls_price = typcls_price.split()[1]
 
 products = []
 
+prodname = "ERROR"
+price = "ERROR"
+
 for url in product_urls: 
     html = BeautifulSoup(requests.get(url).text, features = "lxml") 
-    prodname = html.find("h1", {"class": cls_prodname}).text
-    price = html.find("p", {"class": cls_price}).text
-    descript = html.find("div", {"class": cls_descript}).text
-    products.append({
-        "prodname": prodname,
-        "price": price,
-        "descript": descript
-    })
+    try:
+        prodname = html.find(typ_prodname, {"class": cls_prodname}).text
+    except: 
+        pass
 
-pd.DataFrame(products).to_csv("out.csv")
+    try:
+        price = html.find(typ_price, {"class": cls_price}).text
+    except: 
+        pass
+
+
+    products.append({
+    "url": url,
+    "prodname": prodname,
+    "price": price
+    })
+        
+    print(f"Finished {url} - {prodname}")
+        
+
+
+
+pd.DataFrame(products).to_csv(f"src/scraping/products/{urlparse(domain).netloc}.csv")
 
 
