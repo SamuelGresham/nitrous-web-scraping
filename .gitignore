@@ -1,2 +1,5 @@
 *.DS_store
 *.env
+src/scraping/products/
+src/scraping/URLs
+
