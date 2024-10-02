@@ -6,7 +6,7 @@ from pprint import pprint
 import pandas as pd 
 
 # Define globals
-domain = "https://www.nangdeliverybrisbane.com.au/"
+domain = "https://startwhip.com.au/"
 internal_links = [domain]
 internal_links_searched = []
 
@@ -17,7 +17,10 @@ t = {
 
 # Checks to see if a URL is within the predefined domain
 def is_within_domain(url):
-    return f'https://{urlparse(url).netloc}/' == domain or url[0] == "/"
+    try:
+        return f'https://{urlparse(url).netloc}/' == domain or url[0] == "/"
+    except:
+        return False
 
 # Gets all the linked pages from a URL
 def get_pages(url): 
@@ -124,7 +127,7 @@ price = "ERROR"
 for url in product_urls: 
     html = BeautifulSoup(requests.get(url).text, features = "lxml") 
     try:
-        prodname = html.find(typ_prodname, {"class": cls_prodname}).text
+        prodname = html.find(typ_prodname, {"class": cls_prodname}).text.strip()
     except: 
         pass
 
