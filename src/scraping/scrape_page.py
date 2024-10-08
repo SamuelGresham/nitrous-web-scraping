@@ -6,7 +6,7 @@ from pprint import pprint
 import pandas as pd 
 
 # Define globals
-domain = "https://www.creamify.com.au/"
+domain = "https://www.ezychargers.com.au/"
 internal_links = [domain]
 internal_links_searched = []
 
