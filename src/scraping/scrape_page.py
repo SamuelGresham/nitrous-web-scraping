@@ -6,13 +6,17 @@ from pprint import pprint
 import pandas as pd 
 
 # Define globals
-domain = "https://www.ezychargers.com.au/"
+domain = "https://nangsbrisbane.com/"
 internal_links = [domain]
 internal_links_searched = []
 
 t = {
     "_": "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 }
+
+sess = requests.Session()
+adapter = requests.adapters.HTTPAdapter(max_retries = 2)
+sess.mount('http://', adapter)
 
 
 # Checks to see if a URL is within the predefined domain
@@ -25,7 +29,7 @@ def is_within_domain(url):
 # Gets all the linked pages from a URL
 def get_pages(url): 
     internal_links_searched.append(url)
-    html = BeautifulSoup(requests.get(url).text, features='lxml')
+    html = BeautifulSoup(sess.get(url).text, features='lxml')
     all_anchors = html.select('a[href]')
     for element in all_anchors: 
         if is_within_domain(element.get("href")): 
