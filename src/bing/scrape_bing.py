@@ -24,7 +24,7 @@ for term in queries:
     query_params = {
     "q": term, # query example
     "hl": "en",          # language
-    "cc": "au",         # country of the search, UK -> United Kingdom
+    "cc": "au",         # country of the search, au -> Australia
     "count": 20
     }    
 
