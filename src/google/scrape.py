@@ -21,7 +21,7 @@ for term in queries:
         query_params = {
         "q": term, # query example
         "hl": "en",          # language
-        "gl": "au",         # country of the search, UK -> United Kingdom
+        "gl": "au",         # country of the search, au -> Australia
         "start": page
         }
 
